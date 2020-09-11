@@ -1,5 +1,6 @@
 # Ejecutar contenedores sin Docker  compose 
 
+
 # Mongo 
 ``` bash
 docker run -d --name some-mongo -p 27017:27017 \
@@ -7,12 +8,18 @@ docker run -d --name some-mongo -p 27017:27017 \
     -e MONGO_INITDB_ROOT_PASSWORD=secret \
     mongo
 ```
+
 # Flask 
+## Build imagen 
+```
+docker build -t flask-rest Flask/
+``` 
+
 ```
 docker run -dt --name some-flask -p 5000:5000 \
     -e MONGO_INITDB_ROOT_USERNAME=mongoadmin \
     -e MONGO_INITDB_ROOT_PASSWORD=secret \
-    -e MONGODB_HOST=some-mongo- \
+    -e MONGODB_HOST=some-mongo \
     --link some-mongo-:MONGODB_HOST \
     -v $(pwd):/python:z \
     --hostname  some-flask \
