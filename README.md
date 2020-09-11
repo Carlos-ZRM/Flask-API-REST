@@ -20,7 +20,7 @@ docker run -dt --name some-flask -p 5000:5000 \
     -e MONGO_INITDB_ROOT_USERNAME=mongoadmin \
     -e MONGO_INITDB_ROOT_PASSWORD=secret \
     -e MONGODB_HOST=some-mongo \
-    --link some-mongo-:MONGODB_HOST \
+    --link some-mongo:MONGODB_HOST \
     -v $(pwd):/python:z \
     --hostname  some-flask \
     flask-rest
