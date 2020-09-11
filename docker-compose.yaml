@@ -1,0 +1,41 @@
+version: '3.8'
+services:
+    mongodb_container:
+        build: Mongo/
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: mongoadmin
+            MONGO_INITDB_ROOT_PASSWORD: secret
+        volumes:
+            - mongodb_data_container:/data/db
+        networks:
+            app_net:
+              ipv4_address: 10.0.1.2
+              aliases:
+                - mongodb_container
+    flask_container:
+        build : Flask/
+        depends_on:
+            - mongodb_container
+        environment:
+            MONGO_INITDB_ROOT_USERNAME : mongoadmin 
+            MONGO_INITDB_ROOT_PASSWORD  : secret 
+            MONGODB_HOST :  mongodb_container
+           
+        ports :
+            - 5000:5000
+        networks:
+            app_net:
+              ipv4_address: 10.0.1.3
+              aliases:
+                - flask_container
+
+volumes:
+    mongodb_data_container:
+
+networks:
+    app_net:
+        driver: bridge
+        ipam:
+            driver:  default
+            config:
+                - subnet: "10.0.1.0/24"
