@@ -35,8 +35,9 @@ docker run -dt --name some-flask -p 5000:5000 \
 ```
 
 # Metodo POST
+```
 curl --header "Content-Type: application/json"   --request POST   --data '{"Pokemon": "Squirtle","Carrera": "ISC", "Semestre":1   }' -i   http://localhost:5000/registro 
-
+```
 
 # Metodo delete 
 
