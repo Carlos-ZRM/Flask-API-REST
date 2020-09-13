@@ -1,0 +1,32 @@
+_format_version: "1.1"
+
+# Each Kong entity (core entity or custom entity introduced by a plugin)
+# can be listed in the top-level as an array of objects:
+
+# services:
+# - name: example-service
+#   url: http://example.com
+#   # Entities can store tags as metadata
+#   tags:
+#   - example
+#   # Entities that have a foreign-key relationship can be nested:
+#   routes:
+#   - name: example-route
+#     paths:
+#     - /
+#   plugins:
+#   - name: key-auth
+# - name: another-service
+#   url: https://example.org
+
+
+# curl -L -i -X GET http://0.0.0.0:8000/users --header 'Host: users.com'
+services:
+- name: users
+  url: http://localhost:5000/
+  host: 127.0.0.1
+  routes:
+  - name: ip-route
+    hosts:
+    - ip-route.com
+    methods: [GET]

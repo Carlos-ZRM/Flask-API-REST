@@ -15,15 +15,13 @@ services:
         build : Flask/
         depends_on:
             - mongodb_container
-         #deploy:
-         #   replicas: 2
+        deploy:
+            replicas: 2
         environment:
             MONGO_INITDB_ROOT_USERNAME : mongoadmin 
             MONGO_INITDB_ROOT_PASSWORD  : secret 
             MONGODB_HOST :  mongodb_container
             FLASK_HOST : flask_container 
-        ports:
-                - "5000:5000"
         networks:
             app_net:
                aliases:  

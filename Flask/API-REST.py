@@ -1,4 +1,6 @@
 from flask import Flask, request, json, Response
+import flask_monitoringdashboard as dashboard
+
 from pymongo import MongoClient
 import logging as log
 import os
@@ -52,21 +54,16 @@ else :
 URI_CONNECTION = "mongodb://"+ MONGO_INITDB_ROOT_USERNAME + ":" + MONGO_INITDB_ROOT_PASSWORD + "@" + MONGODB_HOST + ":" + MONGODB_PORT +  "/"
 
 app = Flask(__name__)
-
+#dashboard.bind(app)
 
 class MongoAPI:
     def __init__(self, data=None):
         log.basicConfig(level=log.DEBUG, format='%(asctime)s %(levelname)s:\n%(message)s\n')
-        ''' 
-        self.cliente = MongoClient(URI_CONNECTION, username = MONGO_INITDB_ROOT_USERNAME ,
-                                password= MONGO_INITDB_ROOT_PASSWORD, 
-                                serverSelectionTimeoutMS=MONGODB_TIMEOUT,maxPoolSize=10)                                                            # Docker and we are using Docker Compose
-        '''
         
         self.cliente = MongoClient(URI_CONNECTION)
         
-        base = 'IshmeetDB'
-        coleccion = 'people'
+        base = 'gdc_escom'
+        coleccion = 'registro'
         
         cursor = self.cliente[MONGODB_DB]
         self.coleccion = cursor[MONGODB_COLECCTION]
@@ -91,7 +88,7 @@ class MongoAPI:
         filt = data['Filtro']
         updated_data = {"$set": data['Datos']}
         response = self.coleccion.update_one(filt, updated_data)
-        output = {'Status': 'Successfully Updated' if response.modified_count > 0 else "Nothing was updated."}
+        output = {'Status': 'El registro se ha modificado' if response.modified_count > 0 else "No se ha podido modificar el registro."}
         return output
 
     def delete(self, data):
@@ -131,7 +128,7 @@ def mongo_write():
 def mongo_update():
     data = request.json
     if data is None or data == {} or 'Filtro' not in data or 'Datos' not in data:
-        return Response(response=json.dumps({"Error": "Introdusca el filtro o los datos "}),
+        return Response(response=json.dumps({"Error": "Introduzca el filtro o los datos "}),
                         status=400,
                         mimetype='application/json')
     obj1 = MongoAPI()
@@ -145,7 +142,7 @@ def mongo_update():
 def mongo_delete():
     data = request.json
     if data is None or data == {} or 'Filtro' not in data:
-        return Response(response=json.dumps({"Error": "Introdusca el filtro"}),
+        return Response(response=json.dumps({"Error": "Introduzca el filtro"}),
                         status=400,
                         mimetype='application/json')
     obj1 = MongoAPI()
@@ -160,9 +157,9 @@ def get_ips():
     return Response(response=json.dumps({'IP Remota': request.remote_addr, 'IP Host':request.environ['SERVER_NAME']}),
                     status=200,
                     mimetype='application/json')
-    #return jsonify({'IP Remota': request.remote_addr, 'IP Host':request.environ['SERVER_NAME']  }), 200
+
 
 if __name__ == '__main__':
-    app.run(debug=True, port=FLASK_PORT, host=FLASK_HOST)
+        app.run(debug=True, port=FLASK_PORT, host=FLASK_HOST)
 
 
