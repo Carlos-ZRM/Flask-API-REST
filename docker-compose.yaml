@@ -2,6 +2,7 @@ version: '3.8'
 services:
     mongodb_container:
         build: Mongo/
+        restart: always
         environment:
             MONGO_INITDB_ROOT_USERNAME: mongoadmin
             MONGO_INITDB_ROOT_PASSWORD: secret
@@ -15,22 +16,43 @@ services:
         build : Flask/
         depends_on:
             - mongodb_container
-         #deploy:
-         #   replicas: 2
+        restart: always
+        deploy:
+            replicas: 2
         environment:
             MONGO_INITDB_ROOT_USERNAME : mongoadmin 
             MONGO_INITDB_ROOT_PASSWORD  : secret 
             MONGODB_HOST :  mongodb_container
-            FLASK_HOST : flask_container 
-        ports:
-                - "5000:5000"
+            # FLASK_HOST : flask_container 
         networks:
             app_net:
                aliases:  
                   - flask_container
+            kong-net:
+               aliases:
+                  - flask_container
+
+    kong:
+        image: kong:latest
+        restart: always
+        env_file:
+            - ./env/kong.env
+        ports: 
+            - "8000:8000"
+            - "8443:8443"
+            - "127.0.0.1:8001:8001"
+            - "127.0.0.1:8444:8444"
+        volumes:
+            - "kong-vol:/usr/local/kong/declarative"
+        networks:
+             kong-net:
 
 volumes:
     mongodb_data_container:
-
+    kong-vol:
+        external: true
 networks:
     app_net:
+    kong-net:
+        external: true
+        name: kong-net

@@ -154,7 +154,7 @@ def mongo_delete():
 @app.route("/", methods=["GET"])
 def get_ips():
     #print(request.environ)
-    return Response(response=json.dumps({'IP Remota': request.remote_addr, 'IP Host':request.environ['SERVER_NAME']}),
+    return Response(response=json.dumps({'IP Remota': request.remote_addr, 'IP Host':request.environ['SERVER_NAME'],'Info Host':os.uname()[1]}),
                     status=200,
                     mimetype='application/json')
 

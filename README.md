@@ -25,7 +25,8 @@ docker run -dt --name some-flask -p 5000:5000 \
     --hostname  some-flask \
     flask-rest
 ```
-
+# Kong 
+``kong config -c /usr/local/kong/.kong_env parse /usr/local/kong/declarative/kong.yml``
 # Uso de la API 
 
 # Metodos GET 
